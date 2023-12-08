@@ -1,16 +1,18 @@
 private fun main() {
 
-    fun part1(input: List<String>): Int {
-        val instructions = input.first()
-
+    fun parseNetwork(input: List<String>): Map<String, Pair<String, String>> {
         val network = mutableMapOf<String, Pair<String, String>>()
-
-        for (i in 2 until input.size) {
-            val (value, neighbours) = input[i].split(" = ")
+        input.forEach {
+            val (value, neighbours) = it.split(" = ")
             val (left, right) = neighbours.removeSurrounding("(", ")").split(", ")
             network[value] = left to right
         }
+        return network
+    }
 
+    fun part1(input: List<String>): Int {
+        val instructions = input.first()
+        val network = parseNetwork(input.drop(2))
 
         var result = 0
         var current = "AAA"
@@ -39,14 +41,7 @@ private fun main() {
 
     fun part2(input: List<String>): Long {
         val instructions = input.first()
-
-        val network = mutableMapOf<String, Pair<String, String>>()
-
-        for (i in 2 until input.size) {
-            val (value, neighbours) = input[i].split(" = ")
-            val (left, right) = neighbours.removeSurrounding("(", ")").split(", ")
-            network[value] = left to right
-        }
+        val network = parseNetwork(input.drop(2))
 
         val startingNodes = network.keys.filter { it.last() == 'A' }
 
